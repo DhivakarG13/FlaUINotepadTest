@@ -1,0 +1,15 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+ 
+# Visual Studio working folders
+.vs/
+.vscode/
+ 
+# Backup & temporary files 
+*.tmp
+*.bak
+*.swp
+*~$*
+*.log
