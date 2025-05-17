@@ -68,7 +68,7 @@ https://drive.google.com/file/d/1ivXrNGAayPDJ0nHIKdPcdUKSDtXISfd5/view?usp=shari
     * Why UI Automation Testing?
     * Testing Windows Applications using FlaUI
        * What is FlaUInspect?
-       * Methods provided by FlaUI Library
+       * FlaUI Libraries
        * Condition factory and Property Library
     * Optimization Tips(for searching)
     * Blockers
@@ -90,5 +90,23 @@ https://drive.google.com/file/d/1ivXrNGAayPDJ0nHIKdPcdUKSDtXISfd5/view?usp=shari
 ## Testing Windows applications using FlaUI
 * FlaUI is based on native UI Automation libraries from Microsoft and therefore kind of a wrapper around them.
 * The above statement means the UI Automation Libraries already has methods to access any UI elements of a application but those are low-level and confusing. The FlaUI libraries wraps around those libraries.
-* The methods in FlaUI libraries  provides more clarity and reduces the number of lines to code for accessing an element.
+* The methods in FlaUI libraries provides more clarity and reduces the number of lines to code for accessing an element.
+### FlaUI Inspect:
+* It is an GUI Inspection tool.
+* #### GUI Inspecting Tools:
+  * These tools fetches the data of the UI elements used in an application.
+  * Available Inspection Tools : 1) UISPY 2) INSPECT 3) Visual UIA Verify 4) FLAUINSPECT
+* FlaUI Modes and Working Screen Shots :
 
+### FlaUI Libraries: 
+   * FlaUI Core.
+   * FlaUI UIA2.
+   * FlaUI UIA3.
+
+### Methods Provided:
+* Launch(), Attach(), Close().
+* For finding elements:
+   * 
+
+  
+  
