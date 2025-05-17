@@ -32,7 +32,9 @@
 13) Close the Notepad application.
 
 #### Test Demo video:
- // Add video here
+https://drive.google.com/file/d/17SUV2sosDCJLfHnDF0oc-C_CmcGFZUvh/view?usp=sharing
+#### Code walk through video:
+https://drive.google.com/file/d/1ivXrNGAayPDJ0nHIKdPcdUKSDtXISfd5/view?usp=sharing
 #### Video Transcript:
 * To test the Notepad application, I created a Unit Test Project (.NET Framework) (Contains MS Unit tests) by setting my Targeting .NET Framework version to 4.8.
 * FlaUI.Core, FlaUI.UIA2, and FlaUI.UIA3 NuGet packages are installed into my project from Nuget package manager.
