@@ -97,25 +97,29 @@ https://drive.google.com/file/d/1ivXrNGAayPDJ0nHIKdPcdUKSDtXISfd5/view?usp=shari
   * These tools fetches the data of the UI elements used in an application.
   * Available Inspection Tools : 1) UISPY 2) INSPECT 3) Visual UIA Verify 4) FLAUINSPECT
 * FlaUI Modes and Working Screen Shots :
-
+    * ![image](https://github.com/user-attachments/assets/6693d8c9-6d46-4a1b-aa75-fbcac1011a4c)
+    * ![image](https://github.com/user-attachments/assets/47242bca-2ea8-4fec-9622-1e059ef55a16)
+    * ![image](https://github.com/user-attachments/assets/01480d43-99fb-4c32-b703-6f7667db2dd1)
+    * ![image](https://github.com/user-attachments/assets/41279072-7872-42c6-a677-09bde186f565)
+  
 ### FlaUI Libraries: 
    * FlaUI Core.
    * FlaUI UIA2.
    * FlaUI UIA3.
+   * ![image](https://github.com/user-attachments/assets/178059a5-b1b1-4a8b-b001-0d54853d4f09)
+
 
 ### Methods Provided:
 * Launch(), Attach(), Close().
-* For finding elements:
-   * ![image](https://github.com/user-attachments/assets/6693d8c9-6d46-4a1b-aa75-fbcac1011a4c)
-   * ![image](https://github.com/user-attachments/assets/47242bca-2ea8-4fec-9622-1e059ef55a16)
+* For finding elements: FindFirstDescendant(), FindAllDescendants(), FinfFirstChild, FindAllChildren(), FindFirst(), FindFirstXpath(), FindAllXPath().
+* For performing Operations: Click(), Press(), Type(); 
 
+### Optimization Tips for Searching:
+* Caching the panel to acces all it's elements.
+* Prefer searching using AutomationID.
+* Multiple Conditonal factory Conditions chained.
+* Speed (varies based on circumstance): FindFirstChild() > FindFirstDescendant() > FindAllChildren() > FindAllDescendants().
 
-![image](https://github.com/user-attachments/assets/01480d43-99fb-4c32-b703-6f7667db2dd1)
-
-![image](https://github.com/user-attachments/assets/41279072-7872-42c6-a677-09bde186f565)
-
-
-  ![image](https://github.com/user-attachments/assets/7b363ccc-e07b-408f-ab5f-82ea85e8f54f)
-![image](https://github.com/user-attachments/assets/9151ea6e-308e-48ae-88bd-67c7bc6c2cb8)
-
-  
+### Blockers:
+* Suitable DotNet version that FlaUI packages support.
+* In windows 11 testing Notepad is not possible. because Notepad is a WindowsAppX/UWP App. 
