@@ -12,7 +12,7 @@
  -----------
 ## Test Information
 
-#### Application Tested: Windows Notepad 11.2503.16.0 // Check This
+#### Application Tested: Windows Notepad 22H2 (OS Build 19045.5487)// Check This
 
 #### Feature tested:  Copy Content from a file and Paste it in new document and Save it.
 
@@ -41,11 +41,14 @@ https://drive.google.com/file/d/1ivXrNGAayPDJ0nHIKdPcdUKSDtXISfd5/view?usp=shari
 * In my test method, Initial SetUp was Fetching data from my configFile.json. It contains the source and destination file paths.
 * With the help of a Helper method the object with source file and destination file is fetched. If any error occurs like improper JSON format or invalid File paths, it will throw an exception.
 * Then I created a new instance of the Application class and Opened Notepad application.
-* Notepad is our process opened here and its wrapped inside the Application class and stored in our variable "application". 
-* A new instance of UIA3Automation class is created and stored in the variable "automation".
+* An UIA3Automation object is created with that we access the DeskTop and it's Child Elements of it, We can Fetch and Interact with these elements.
+* Notepad is our process opened here and its wrapped inside the Application class and stored in our variable "application".
+* Condition Factory is used for Filtering the elements.
+* While initializing the condition factory it akes an UIA3 Property library which has the info of the proprtys of a Element.
+* a Button element hs it's respective name and automation ID and Control type will be button. those are it's properties.
 * To get the Main window of the Notepad application. I used the GetWindow method which takes the automation object as the parameter.
 * FlaUInspect tool to inspect the Notepad application and find the details of the elements I need to interact with in this approach.
-* I used the FindFirstDescendant method to find the File menu and click on it. To reduce the search time, I used the AutomationId property to find the File menu.
+* Here FindFirstDescendant method is Used to find any Elements. To reduce the search time, I used the AutomationId property to find the File menu.
 * From the Menu, I clicked on the Open menu item. I used the FindFirstDescendant method to find the Open menu item and click on it.
 
 #### Cases Tested:
@@ -69,3 +72,23 @@ https://drive.google.com/file/d/1ivXrNGAayPDJ0nHIKdPcdUKSDtXISfd5/view?usp=shari
        * Condition factory and Property Library
     * Optimization Tips(for searching)
     * Blockers
+ 
+## What are Windows Applications?
+ * Applications that run natively on Microsoft Windows OS are called Windows application.
+ * Running natively means those apps can dierectly use the Windows OS's API and Runtime enviroinment no translator or emulator or middleware required.
+ * These are coded with windows specific framework (like Win32, .NET, WPF) by following Windows UX guidelines.
+ * Some examples: Notepad.exe, Visual Studio, Calculator and File Explorer.
+
+## Why UI Automation Testing?
+* To test the app's User Interface we'll be performing UI Automation testing.
+* The testing conducted here is Functional UI automation testing because a specific feature's behaviour is tested through the UI and It's automated.
+* By Automating testing we can save time, cost and the tests for the application can be used for a long time.
+* Tools Available for Windows automation
+  
+1)UFT 2) TestComplete 3)Coded UI 4) Ranorex 5) White 6) FLaUI
+
+## Testing Windows applications using FlaUI
+* FlaUI is based on native UI Automation libraries from Microsoft and therefore kind of a wrapper around them.
+* The above statement means the UI Automation Libraries already has methods to access any UI elements of a application but those are low-level and confusing. The FlaUI libraries wraps around those libraries.
+* The methods in FlaUI libraries  provides more clarity and reduces the number of lines to code for accessing an element.
+
