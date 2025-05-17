@@ -106,7 +106,16 @@ https://drive.google.com/file/d/1ivXrNGAayPDJ0nHIKdPcdUKSDtXISfd5/view?usp=shari
 ### Methods Provided:
 * Launch(), Attach(), Close().
 * For finding elements:
-   * 
+   * ![image](https://github.com/user-attachments/assets/6693d8c9-6d46-4a1b-aa75-fbcac1011a4c)
+   * ![image](https://github.com/user-attachments/assets/47242bca-2ea8-4fec-9622-1e059ef55a16)
 
-  
+
+![image](https://github.com/user-attachments/assets/01480d43-99fb-4c32-b703-6f7667db2dd1)
+
+![image](https://github.com/user-attachments/assets/41279072-7872-42c6-a677-09bde186f565)
+
+
+  ![image](https://github.com/user-attachments/assets/7b363ccc-e07b-408f-ab5f-82ea85e8f54f)
+![image](https://github.com/user-attachments/assets/9151ea6e-308e-48ae-88bd-67c7bc6c2cb8)
+
   
