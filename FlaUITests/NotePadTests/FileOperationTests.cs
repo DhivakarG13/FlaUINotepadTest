@@ -22,6 +22,7 @@ namespace NotePadTests
         public void CopyContent_FromExistingFile_Paste_AndSaveNewFile()
         {
             //Assign
+            // Fetching Data from config file.
             string configFilePath = "C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\TestData\\ConfigFileFolder\\ConfigFile.json";
             FileHandler.LogTestData("Errors Occured:");
             if (!File.Exists(configFilePath))
@@ -49,12 +50,14 @@ namespace NotePadTests
             }
 
             //Act
+            // Launching the Notepad application.
             Application application = Application.Launch(@"notepad.exe");
             Thread.Sleep(1000);
             UIA3Automation automation = new UIA3Automation();
             Window mainWindow = application.GetMainWindow(automation);
             ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
 
+            // Opening the file using the File menu.
             MenuItem fileMenu = mainWindow.FindFirstDescendant(cf.ByName("File")).AsMenuItem();
             fileMenu.Click();
             Thread.Sleep(1000);
@@ -62,6 +65,7 @@ namespace NotePadTests
             openMenuItem.Click();
             Thread.Sleep(1000);
 
+            //open file dialog is opened and we need to enter the file name in the text box.
             Window openFileWindow = mainWindow.ModalWindows.FirstOrDefault(w => w.Title.Contains("Open"));
             if (openFileWindow != null)
             {
@@ -77,15 +81,19 @@ namespace NotePadTests
                 Assert.Fail("Open window not found.");
             }
 
+            // Wait for the file to open and focus on the document area.
             mainWindow.FindFirstDescendant(cf.ByControlType(ControlType.Document)).Focus();
+            // Copying all contents
             Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_A);
             Thread.Sleep(1000);
             Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_C);
             Thread.Sleep(1000);
 
+            // Getting the text from the document range to compare later.
             ITextPattern textPattern = mainWindow.FindFirstDescendant(cf.ByControlType(ControlType.Document)).Patterns.Text.PatternOrDefault;
             string ExpectedFiledata = textPattern.DocumentRange.GetText(-1);
 
+            // Creating a new file and pasting the copied content.
             fileMenu = mainWindow.FindFirstDescendant(cf.ByName("File")).AsMenuItem();
             fileMenu.Click();
             Thread.Sleep(1000);
@@ -98,14 +106,15 @@ namespace NotePadTests
             Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_V);
             Thread.Sleep(1000);
 
-
+            // Getting the text from the new document range to compare.
             textPattern = mainWindow.FindFirstDescendant(cf.ByControlType(ControlType.Document)).Patterns.Text.PatternOrDefault;
-            string ActualNewFiledata = textPattern.DocumentRange.GetText(-1);
-            Assert.AreEqual(ExpectedFiledata, ActualNewFiledata);
+            string ActualNewFileData = textPattern.DocumentRange.GetText(-1);
+            Assert.AreEqual(ExpectedFiledata, ActualNewFileData);
 
             Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
             Thread.Sleep(1000);
 
+            // Accessing the Save As window to enter the destination file name.
             Window saveAsWindow = mainWindow.ModalWindows.FirstOrDefault(w => w.Title.Contains("Save As"));
             if (saveAsWindow != null)
             {
