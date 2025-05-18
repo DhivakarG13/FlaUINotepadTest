@@ -12,7 +12,7 @@
  -----------
 ## Test Information
 
-#### Application Tested: Windows Notepad 22H2 (OS Build 19045.5487)// Check This
+#### Application Tested: Windows Notepad 22H2 (OS Build 19045.5487)
 
 #### Feature tested:  Copy Content from a file and Paste it in new document and Save it.
 
