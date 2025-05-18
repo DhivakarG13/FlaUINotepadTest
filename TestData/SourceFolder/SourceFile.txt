@@ -1,1 +1,1 @@
-Our Data
+FlaUI is a .NET library which helps with automated UI testing of Windows applications. It is based on native UI Automation libraries from Microsoft and therefore kind of a wrapper around them.
