@@ -7,7 +7,6 @@
     /// destination paths, such as when performing file operations like copying or moving folders.</remarks>
     public class FolderInfo
     {
-
         public string SourceFilePath { get; set; }
         public string DestinationFilePath { get; set; }
 

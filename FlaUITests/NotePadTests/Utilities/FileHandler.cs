@@ -35,15 +35,11 @@ namespace NotePadTests.Utilities
             }
             catch (JsonException ex)
             {
-                configData = null;
-                //LogTestData("JsonException thrown while Deserializing the config file, Check whether the file's data is in JSON format");
-                //Change the exception message
+                throw new Exception($"Error occured while deserializing data from {jsonFilePath} check weather the data is in JSON format");
             }
             catch (Exception ex)
             {
-                configData = null;
-                //LogTestData($"{ex.Message} thrown while Deserializing");
-                //Change the exception message
+                throw new Exception($"Error occured while fetching data from {jsonFilePath}");
             }
 
             return configData;
@@ -53,14 +49,33 @@ namespace NotePadTests.Utilities
         /// Appends the specified logMessage message to a file.
         /// </summary>
         /// <param name="logMessage">The logMessage message to write to the file. Cannot be null or empty.</param>
-        public static void LogTestData(string logMessage, string filePath)
+        public static void LogData(string logMessage, string filePath)
         {
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write))
+            try
             {
-                using (StreamWriter streamWriter = new StreamWriter(fileStream))
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Append, FileAccess.Write))
                 {
-                    streamWriter.WriteLine(logMessage);
+                    using (StreamWriter streamWriter = new StreamWriter(fileStream))
+                    {
+                        streamWriter.WriteLine(logMessage);
+                    }
                 }
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new Exception($"Error occured while Logging data in {filePath}");
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                throw new Exception($"Error occured while Logging data in {filePath}, No such directory is not found");
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new Exception($"Error occured while Logging data in {filePath}, The {filePath} is not found\"");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error occured while Logging data in {filePath}\n Error Type: {ex.ToString()}\n Error Message: {ex.Message}");
             }
         }
 

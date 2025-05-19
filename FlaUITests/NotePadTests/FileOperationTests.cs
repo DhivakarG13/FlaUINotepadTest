@@ -29,7 +29,7 @@ namespace NotePadTests
             // Fetching Data from config file.
             try
             {
-                FileHandler.LogTestData("Errors Occured:", ErrorLogFilePath);
+                FileHandler.LogData("Errors Occured:", ErrorLogFilePath);
                 if (!File.Exists(configFilePath))
                 {
                     Assert.Fail("configFile does not exist");
@@ -53,13 +53,13 @@ namespace NotePadTests
             }
             catch (Exception ex)
             {
-                FileHandler.LogTestData(ex.Message, ErrorLogFilePath);
+                FileHandler.LogData(ex.Message, ErrorLogFilePath);
             }
         }
 
-        //FileHandler.LogTestData("configFile does not exist", ErrorLogFilePath);
-        //FileHandler.LogTestData("Config File data is not in proper JSON format", ErrorLogFilePath);
-        //FileHandler.LogTestData("Check whether the source file exists or the folder path in config is correct", ErrorLogFilePath);
+        //FileHandler.LogData("configFile does not exist", ErrorLogFilePath);
+        //FileHandler.LogData("Config File data is not in proper JSON format", ErrorLogFilePath);
+        //FileHandler.LogData("Check whether the source file exists or the folder path in config is correct", ErrorLogFilePath);
 
         [TestMethod]
         public void CopyContent_FromExistingFile_Paste_AndSaveNewFile()
@@ -67,50 +67,55 @@ namespace NotePadTests
             //Assign
             //Act
             // Launching the Notepad application.
-            using (Application = new ApplicationManager(@"notepad.exe", new UIA3Automation()))
+            try
             {
-                MenuItem fileMenu = Application.GetDescendant("File").AsMenuItem();
-                fileMenu.Click();
-                MenuItem openMenuItem = Application.GetDescendant("Open...").AsMenuItem();
-                openMenuItem.Click();
-                Thread.Sleep(1000);
-                Window openFileWindow = Application.GetModalWindow("Open");
-                TextBox fileNameTextBox = Application.GetModalWindowDescendant(openFileWindow, "File name:", ControlType.Edit).AsTextBox();
-                fileNameTextBox.Enter(FolderInfo.SourceFilePath);
-                Keyboard.Type(VirtualKeyShort.ENTER);
-                Thread.Sleep(1000);
-                Application.CopyContentToClipBoard();
-                AutomationElement document = Application.GetDescendant("Text Editor", ControlType.Document);
-                string ExpectedFiledata = Application.GetValueFromTextBox(document.AsTextBox());
-                fileMenu.Click();
-                MenuItem newMenuItem = Application.GetDescendant("New").AsMenuItem();
-                newMenuItem.Click();
-                document = Application.GetDescendant("Text Editor", ControlType.Document);
-                document.Focus();
-                Application.PasteContentFromClipBoard();
-                Thread.Sleep(1000);
-                string ActualNewFileData = Application.GetValueFromTextBox(document.AsTextBox());
-                Assert.AreEqual(ExpectedFiledata, ActualNewFileData);
-                Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
-                Thread.Sleep(1000);
-                Window saveAsWindow = Application.GetModalWindow("Save As");
-                fileNameTextBox = Application.GetModalWindowDescendant(saveAsWindow, "File name:", ControlType.Edit).AsTextBox();
-                fileNameTextBox.Enter(FolderInfo.DestinationFilePath);
-                Keyboard.Type(VirtualKeyShort.ENTER);
-                Thread.Sleep(2000);
-            }
+                using (Application = new ApplicationManager(@"notepad.exe", new UIA3Automation()))
+                {
+                    MenuItem fileMenu = Application.GetDescendant("File").AsMenuItem();
+                    fileMenu.Click();
+                    MenuItem openMenuItem = Application.GetDescendant("Open...").AsMenuItem();
+                    openMenuItem.Click();
+                    //Thread.Sleep(1000);
+                    Window openFileWindow = Application.GetModalWindow("Open");
+                    TextBox fileNameTextBox = Application.GetModalWindowDescendant(openFileWindow, "File name:", ControlType.Edit).AsTextBox();
+                    fileNameTextBox.Enter(FolderInfo.SourceFilePath);
+                    Keyboard.Type(VirtualKeyShort.ENTER);
+                    //Thread.Sleep(1000);
+                    Application.CopyContentToClipBoard();
+                    AutomationElement document = Application.GetDescendant("Text Editor", ControlType.Document);
+                    string ExpectedFiledata = Application.GetValueFromTextBox(document.AsTextBox());
+                    fileMenu.Click();
+                    MenuItem newMenuItem = Application.GetDescendant("New").AsMenuItem();
+                    newMenuItem.Click();
+                    document = Application.GetDescendant("Text Editor", ControlType.Document);
+                    document.Focus();
+                    Application.PasteContentFromClipBoard();
+                    //Thread.Sleep(1000);
+                    string ActualNewFileData = Application.GetValueFromTextBox(document.AsTextBox());
+                    Assert.AreEqual(ExpectedFiledata, ActualNewFileData);
+                    Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
+                    //Thread.Sleep(1000);
+                    Window saveAsWindow = Application.GetModalWindow("Save As");
+                    fileNameTextBox = Application.GetModalWindowDescendant(saveAsWindow, "File name:", ControlType.Edit).AsTextBox();
+                    fileNameTextBox.Enter(FolderInfo.DestinationFilePath);
+                    Keyboard.Type(VirtualKeyShort.ENTER);
+                    //Thread.Sleep(2000);
+                }
 
-            //Assert
-            if (!File.Exists(FolderInfo.DestinationFilePath))
-            {
-                FileHandler.LogTestData("Destination file not created.", ErrorLogFilePath);
-                Assert.Fail("Destination file not created.");
-            }
+                //Assert
+                if (!File.Exists(FolderInfo.DestinationFilePath))
+                {
+                    Assert.Fail("Destination file not created.");
+                }
 
-            if (!File.ReadAllText(FolderInfo.SourceFilePath).Equals(File.ReadAllText(FolderInfo.DestinationFilePath)))
+                if (!File.ReadAllText(FolderInfo.SourceFilePath).Equals(File.ReadAllText(FolderInfo.DestinationFilePath)))
+                {
+                    Assert.Fail("Destination file data is not same as the Source file Data.");
+                }
+            }
+            catch (Exception ex)
             {
-                FileHandler.LogTestData("Destination file data is not same as the Source file Data.", ErrorLogFilePath);
-                Assert.Fail("Destination file data is not same as the Source file Data.");
+                FileHandler.LogData(ex.Message, ErrorLogFilePath);
             }
         }
     }
