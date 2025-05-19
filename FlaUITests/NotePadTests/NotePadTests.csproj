@@ -112,7 +112,7 @@
     <Compile Include="Utilities\FileHandler.cs" />
     <Compile Include="FileOperationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WrapperClass\WrapperClass.cs" />
+    <Compile Include="Wrappers\ApplicationManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

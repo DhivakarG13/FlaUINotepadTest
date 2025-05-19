@@ -1,158 +1,117 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
-using System.Linq;
-using FlaUI.Core;
 using FlaUI.UIA3;
 using FlaUI.Core.Input;
-using FlaUI.Core.Conditions;
 using FlaUI.Core.WindowsAPI;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
-using FlaUI.Core.Patterns;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NotePadTests.Models;
 using NotePadTests.Utilities;
 using NotePadTests.Wrappers;
-using System;
+using System.Runtime.ExceptionServices;
 
-
-// Uncomment the Thread.Sleep(1000); lines if you want to add delays between actions for better visibility or debugging purposes.
 
 namespace NotePadTests
 {
     [TestClass]
     public class FileOperationTests
     {
-        string configFilePath = "C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\TestData\\ConfigFileFolder\\ConfigFile.json";
-        FolderInfo FolderInfo;
-        WrapperClass WrapperObject;
+        private string configFilePath = "C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\FlaUINotepadTest\\TestData\\ConfigFileFolder\\ConfigFile.json";
+        private string ErrorLogFilePath = "C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\FlaUINotepadTest\\TestData\\TestLog\\" + $"ErrorLog[{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}].txt";
+        private FolderInfo FolderInfo;
+        private ApplicationManager Application;
 
-        [TestMethod]
-        public void FetchFolderInfo_FromConfigFile()
+        [TestInitialize]
+        public void Setup()
         {
-            //Assign
             // Fetching Data from config file.
-            FileHandler.LogTestData("Errors Occured:");
-            if (!File.Exists(configFilePath))
+            try
             {
-                FileHandler.LogTestData("configFile does not exist");
-                Assert.Fail("configFile does not exist");
-            }
+                FileHandler.LogTestData("Errors Occured:", ErrorLogFilePath);
+                if (!File.Exists(configFilePath))
+                {
+                    Assert.Fail("configFile does not exist");
+                }
 
-            FolderInfo = FileHandler.FetchConfigFileData(configFilePath);
-            if (FolderInfo == null)
-            {
-                FileHandler.LogTestData("Config File data is not in proper JSON format");
-                Assert.Fail("Config File data is not in proper JSON format");
-            }
+                FolderInfo = FileHandler.FetchFileData<FolderInfo>(configFilePath);
+                if (FolderInfo == null)
+                {
+                    Assert.Fail("Config File data is not in proper JSON format");
+                }
 
-            if (!File.Exists(FolderInfo.SourceFilePath))
+                if (!File.Exists(FolderInfo.SourceFilePath))
+                {
+                    Assert.Fail("Check whether the source file exists or the folder path in config is correct");
+                }
+
+                if (File.Exists(FolderInfo.DestinationFilePath))
+                {
+                    File.Delete(FolderInfo.DestinationFilePath);
+                }
+            }
+            catch (Exception ex)
             {
-                FileHandler.LogTestData("Check whether the source file exists or the folder path in config is correct");
-                Assert.Fail("Check whether the source file exists or the folder path in config is correct");
+                FileHandler.LogTestData(ex.Message, ErrorLogFilePath);
             }
         }
 
+        //FileHandler.LogTestData("configFile does not exist", ErrorLogFilePath);
+        //FileHandler.LogTestData("Config File data is not in proper JSON format", ErrorLogFilePath);
+        //FileHandler.LogTestData("Check whether the source file exists or the folder path in config is correct", ErrorLogFilePath);
 
         [TestMethod]
         public void CopyContent_FromExistingFile_Paste_AndSaveNewFile()
         {
-
-            if (File.Exists(FolderInfo.DestinationFilePath))
-            {
-                File.Delete(FolderInfo.DestinationFilePath);
-            }
-
+            //Assign
             //Act
             // Launching the Notepad application.
-            using (Application application = Application.Launch(@"notepad.exe"))
+            using (Application = new ApplicationManager(@"notepad.exe", new UIA3Automation()))
             {
-                WrapperObject = new WrapperClass(@"notepad.exe", new UIA3Automation());
-
-                // Opening the file using the File menu.
-                MenuItem fileMenu = WrapperObject.GetElementByName<MenuItem>("File");
+                MenuItem fileMenu = Application.GetDescendant("File").AsMenuItem();
                 fileMenu.Click();
-                MenuItem openMenuItem = WrapperObject.GetElementByName<MenuItem>("Open...");
+                MenuItem openMenuItem = Application.GetDescendant("Open...").AsMenuItem();
                 openMenuItem.Click();
-
-                //open file dialog is opened and we need to enter the file name in the text box.
-                Window openFileWindow = WrapperObject.GetElementByName<Window>("Open");
-
-                TextBox fileNameTextBox = WrapperObject.GetElementByNameFromWindow<TextBox>(openFileWindow, "File name:");
+                Thread.Sleep(1000);
+                Window openFileWindow = Application.GetModalWindow("Open");
+                TextBox fileNameTextBox = Application.GetModalWindowDescendant(openFileWindow, "File name:", ControlType.Edit).AsTextBox();
                 fileNameTextBox.Enter(FolderInfo.SourceFilePath);
                 Keyboard.Type(VirtualKeyShort.ENTER);
-
-                // Wait for the file to open and focus on the document area.
-                WrapperObject.GetElementByName<MenuItem>("Open...");
-                TextBox document = WrapperObject.GetElementByName<TextBox>("Text editor"); ;
-                document.Focus();
-
-                // Copying all contents
-                WrapperObject.CopyContentToClipBoard();
-
-                // Getting the text from the document range to compare later.
-                string ExpectedFiledata = WrapperObject.GetValueFromTextBox(document);
-
-                // Creating a new file and pasting the copied content.
+                Thread.Sleep(1000);
+                Application.CopyContentToClipBoard();
+                AutomationElement document = Application.GetDescendant("Text Editor", ControlType.Document);
+                string ExpectedFiledata = Application.GetValueFromTextBox(document.AsTextBox());
                 fileMenu.Click();
-                MenuItem newMenuItem = WrapperObject.GetElementByName<MenuItem>("New");
+                MenuItem newMenuItem = Application.GetDescendant("New").AsMenuItem();
                 newMenuItem.Click();
-
+                document = Application.GetDescendant("Text Editor", ControlType.Document);
                 document.Focus();
-                WrapperObject.PasteContentFromClipBoard();
-
-                // Getting the text from the new document range to compare.
-                string ActualNewFileData = WrapperObject.GetValueFromTextBox(document);
+                Application.PasteContentFromClipBoard();
+                Thread.Sleep(1000);
+                string ActualNewFileData = Application.GetValueFromTextBox(document.AsTextBox());
                 Assert.AreEqual(ExpectedFiledata, ActualNewFileData);
-
                 Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
-
-                // Accessing the Save As window to enter the destination file name.
-                Window saveAsWindow = WrapperObject.GetElementByName<Window>("Save As");
-                fileNameTextBox = WrapperObject.GetElementByNameFromWindow<TextBox>(openFileWindow, "File name:");
+                Thread.Sleep(1000);
+                Window saveAsWindow = Application.GetModalWindow("Save As");
+                fileNameTextBox = Application.GetModalWindowDescendant(saveAsWindow, "File name:", ControlType.Edit).AsTextBox();
                 fileNameTextBox.Enter(FolderInfo.DestinationFilePath);
                 Keyboard.Type(VirtualKeyShort.ENTER);
+                Thread.Sleep(2000);
             }
 
             //Assert
             if (!File.Exists(FolderInfo.DestinationFilePath))
             {
-                FileHandler.LogTestData("Destination file not created.");
+                FileHandler.LogTestData("Destination file not created.", ErrorLogFilePath);
                 Assert.Fail("Destination file not created.");
             }
 
             if (!File.ReadAllText(FolderInfo.SourceFilePath).Equals(File.ReadAllText(FolderInfo.DestinationFilePath)))
             {
-                FileHandler.LogTestData("Destination file data is not same as the Source file Data.");
+                FileHandler.LogTestData("Destination file data is not same as the Source file Data.", ErrorLogFilePath);
                 Assert.Fail("Destination file data is not same as the Source file Data.");
             }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Assertion to check whether the sourcee file exists. - Done
-// Check whether the destination file already exists and Handle accordingly. - Deleted if Exists
-// Check whether the Config file data is in proper JSON format. - Done
-// Check whether the sorce and Destination file exists after the operation. - Done
-// check whether the content in the destination file == expected content. - Done
-// if other note pad instance is open is it affecting our current instance. 
-// check this for all the approaches. - Only one approach will be approved :)
-// Asynchrony is needed here ?? - Not Needed
-// Have a Test Log document. - Done
