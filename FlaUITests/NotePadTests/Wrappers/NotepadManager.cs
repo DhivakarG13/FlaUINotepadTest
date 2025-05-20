@@ -17,6 +17,11 @@ namespace NotePadTests.Wrappers
         public NotepadManager(string executable, UIA2Automation automation) : base(executable, automation)
         {
         }
+
+        /// <summary>
+        /// Opens an existing file by interacting with the application's file menu and open dialog.
+        /// </summary>
+        /// <param name="filePath">The full path of the file to open. This must be a valid, accessible file path.</param>
         public void OpenAnExistingFile(string filePath)
         {
             MenuItem fileMenu = GetDescendant("File").AsMenuItem();
@@ -30,6 +35,10 @@ namespace NotePadTests.Wrappers
             Keyboard.Type(VirtualKeyShort.ENTER);
             Thread.Sleep(1000);
         }
+
+        /// <summary>
+        /// Opens a new page by navigating through the "File" menu and selecting the "New" option.
+        /// </summary>
         public void OpenANewPage()
         {
             MenuItem fileMenu = GetDescendant("File").AsMenuItem();
@@ -37,6 +46,12 @@ namespace NotePadTests.Wrappers
             MenuItem newMenuItem = GetDescendant("New").AsMenuItem();
             newMenuItem.Click();
         }
+
+        /// <summary>
+        /// Saves the current content to a file at the specified file path.
+        /// </summary>
+        /// <param name="filePath">The full path, including the file name, where the content should be saved.  This must be a valid file path
+        /// and cannot be null or empty.</param>
         public void SaveContentToFile(string filePath)
         {
             Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
@@ -47,6 +62,5 @@ namespace NotePadTests.Wrappers
             Keyboard.Type(VirtualKeyShort.ENTER);
             Thread.Sleep(2000);
         }
-
     }
 }

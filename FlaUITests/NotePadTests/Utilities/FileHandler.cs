@@ -35,11 +35,11 @@ namespace NotePadTests.Utilities
             }
             catch (JsonException ex)
             {
-                throw new Exception($"Error occured while deserializing data from {jsonFilePath} check weather the data is in JSON format");
+                throw new Exception($"Error occurred while deserializing data from {jsonFilePath} check weather the data is in JSON format");
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error occured while fetching data from {jsonFilePath}");
+                throw new Exception($"Error occurred while fetching data from {jsonFilePath}");
             }
 
             return configData;
@@ -48,7 +48,8 @@ namespace NotePadTests.Utilities
         /// <summary>
         /// Appends the specified logMessage message to a file.
         /// </summary>
-        /// <param name="logMessage">The logMessage message to write to the file. Cannot be null or empty.</param>
+        /// <param name="logMessage">The logMessage message to write to the file.</param>
+        /// <param name="filePath">Cannot be null or empty.</param>
         public static void LogData(string logMessage, string filePath)
         {
             try
@@ -61,21 +62,20 @@ namespace NotePadTests.Utilities
                     }
                 }
             }
-            catch (ArgumentNullException ex)
-            {
-                throw new Exception($"Error occured while Logging data in {filePath}");
-            }
             catch (DirectoryNotFoundException ex)
             {
-                throw new Exception($"Error occured while Logging data in {filePath}, No such directory is not found");
+                LogData(logMessage, $"ErrorLog[{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}].txt");
             }
             catch (FileNotFoundException ex)
             {
-                throw new Exception($"Error occured while Logging data in {filePath}, The {filePath} is not found\"");
+                LogData(logMessage, $"ErrorLog[{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}].txt");
+
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error occured while Logging data in {filePath}\n Error Type: {ex.ToString()}\n Error Message: {ex.Message}");
+                LogData(
+                    $"Error occurred while Logging data in {filePath}\n Error Type: {ex.ToString()}\n Error Message: {ex.Message}",
+                    $"ErrorLog[{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}].txt");
             }
         }
 

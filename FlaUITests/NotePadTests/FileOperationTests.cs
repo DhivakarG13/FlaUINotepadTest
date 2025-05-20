@@ -29,7 +29,7 @@ namespace NotePadTests
             // Fetching Data from config file.
             try
             {
-                FileHandler.LogData("Errors Occured:", ErrorLogFilePath);
+                FileHandler.LogData("Errors Occurred:", ErrorLogFilePath);
                 if (!File.Exists(configFilePath))
                 {
                     Assert.Fail("configFile does not exist");
@@ -66,23 +66,18 @@ namespace NotePadTests
             {
                 using (Notepad = new NotepadManager(@"notepad.exe", new UIA3Automation()))
                 {
-
                     //Act
                     Notepad.OpenAnExistingFile(FolderInfo.SourceFilePath);
                     Notepad.CopyFocusedContentToClipBoard();
                     Notepad.OpenANewPage();
-                    //AutomationElement document = Notepad.GetDescendant("Text Editor", ControlType.Document);
-                    //document.Focus();
                     Notepad.PasteContentFromClipBoard();
-                    Thread.Sleep(1000);
                     Notepad.SaveContentToFile(FolderInfo.DestinationFilePath);
-                    Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
                 }
 
                 //Assert
                 if (!File.Exists(FolderInfo.DestinationFilePath))
                 {
-                    Assert.Fail("Destination file not created.");
+                    Assert.Fail($"Destination file not created in path {FolderInfo.DestinationFilePath}");
                 }
 
                 if (!File.ReadAllText(FolderInfo.SourceFilePath).Equals(File.ReadAllText(FolderInfo.DestinationFilePath)))
