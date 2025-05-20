@@ -33,31 +33,13 @@
 
 #### Test Demo video:
 https://drive.google.com/file/d/17SUV2sosDCJLfHnDF0oc-C_CmcGFZUvh/view?usp=sharing
-#### Code walk through video:
-https://drive.google.com/file/d/1ivXrNGAayPDJ0nHIKdPcdUKSDtXISfd5/view?usp=sharing
-#### Video Transcript:
-* To test the Notepad application, I created a Unit Test Project (.NET Framework) (Contains MS Unit tests) by setting my Targeting .NET Framework version to 4.8.
-* FlaUI.Core, FlaUI.UIA2, and FlaUI.UIA3 NuGet packages are installed into my project from Nuget package manager.
-* In my test method, Initial SetUp was Fetching data from my configFile.json. It contains the source and destination file paths.
-* With the help of a Helper method the object with source file and destination file is fetched. If any error occurs like improper JSON format or invalid File paths, it will throw an exception.
-* Then I created a new instance of the Application class and Opened Notepad application.
-* An UIA3Automation object is created with that we access the DeskTop and it's Child Elements of it, We can Fetch and Interact with these elements.
-* Notepad is our process opened here and its wrapped inside the Application class and stored in our variable "application".
-* Condition Factory is used for Filtering the elements.
-* While initializing the condition factory it akes an UIA3 Property library which has the info of the proprtys of a Element.
-* a Button element hs it's respective name and automation ID and Control type will be button. those are it's properties.
-* To get the Main window of the Notepad application. I used the GetWindow method which takes the automation object as the parameter.
-* FlaUInspect tool to inspect the Notepad application and find the details of the elements I need to interact with in this approach.
-* Here FindFirstDescendant method is Used to find any Elements. To reduce the search time, I used the AutomationId property to find the File menu.
-* From the Menu, I clicked on the Open menu item. I used the FindFirstDescendant method to find the Open menu item and click on it.
 
 #### Cases Tested:
 * Is the path of the Source file and Destination file specified in config file is correct?
 * Is the Choose File window opened after the Open menu item is clicked?
 * Is the Choose File window opened after the CTRL+S is clicked?
 * Is the Destination File Created after saving?
-* Is the Content in destination file is same as the content in Source file?
-// Add cases here
+* Is the Content in destination file is same as the content in Source file
 
 ---------
 
