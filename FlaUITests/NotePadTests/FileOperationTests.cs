@@ -21,7 +21,7 @@ namespace NotePadTests
         private string configFilePath = "C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\FlaUINotepadTest\\TestData\\ConfigFileFolder\\ConfigFile.json";
         private string ErrorLogFilePath = "C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\FlaUINotepadTest\\TestData\\TestLog\\" + $"ErrorLog[{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}].txt";
         private FolderInfo FolderInfo;
-        private ApplicationManager Application;
+        private NotepadManager Notepad;
 
         [TestInitialize]
         public void Setup()
@@ -57,49 +57,26 @@ namespace NotePadTests
             }
         }
 
-        //FileHandler.LogData("configFile does not exist", ErrorLogFilePath);
-        //FileHandler.LogData("Config File data is not in proper JSON format", ErrorLogFilePath);
-        //FileHandler.LogData("Check whether the source file exists or the folder path in config is correct", ErrorLogFilePath);
-
         [TestMethod]
         public void CopyContent_FromExistingFile_Paste_AndSaveNewFile()
         {
             //Assign
-            //Act
             // Launching the Notepad application.
             try
             {
-                using (Application = new ApplicationManager(@"notepad.exe", new UIA3Automation()))
+                using (Notepad = new NotepadManager(@"notepad.exe", new UIA3Automation()))
                 {
-                    MenuItem fileMenu = Application.GetDescendant("File").AsMenuItem();
-                    fileMenu.Click();
-                    MenuItem openMenuItem = Application.GetDescendant("Open...").AsMenuItem();
-                    openMenuItem.Click();
-                    //Thread.Sleep(1000);
-                    Window openFileWindow = Application.GetModalWindow("Open");
-                    TextBox fileNameTextBox = Application.GetModalWindowDescendant(openFileWindow, "File name:", ControlType.Edit).AsTextBox();
-                    fileNameTextBox.Enter(FolderInfo.SourceFilePath);
-                    Keyboard.Type(VirtualKeyShort.ENTER);
-                    //Thread.Sleep(1000);
-                    Application.CopyContentToClipBoard();
-                    AutomationElement document = Application.GetDescendant("Text Editor", ControlType.Document);
-                    string ExpectedFiledata = Application.GetValueFromTextBox(document.AsTextBox());
-                    fileMenu.Click();
-                    MenuItem newMenuItem = Application.GetDescendant("New").AsMenuItem();
-                    newMenuItem.Click();
-                    document = Application.GetDescendant("Text Editor", ControlType.Document);
-                    document.Focus();
-                    Application.PasteContentFromClipBoard();
-                    //Thread.Sleep(1000);
-                    string ActualNewFileData = Application.GetValueFromTextBox(document.AsTextBox());
-                    Assert.AreEqual(ExpectedFiledata, ActualNewFileData);
+
+                    //Act
+                    Notepad.OpenAnExistingFile(FolderInfo.SourceFilePath);
+                    Notepad.CopyFocusedContentToClipBoard();
+                    Notepad.OpenANewPage();
+                    //AutomationElement document = Notepad.GetDescendant("Text Editor", ControlType.Document);
+                    //document.Focus();
+                    Notepad.PasteContentFromClipBoard();
+                    Thread.Sleep(1000);
+                    Notepad.SaveContentToFile(FolderInfo.DestinationFilePath);
                     Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
-                    //Thread.Sleep(1000);
-                    Window saveAsWindow = Application.GetModalWindow("Save As");
-                    fileNameTextBox = Application.GetModalWindowDescendant(saveAsWindow, "File name:", ControlType.Edit).AsTextBox();
-                    fileNameTextBox.Enter(FolderInfo.DestinationFilePath);
-                    Keyboard.Type(VirtualKeyShort.ENTER);
-                    //Thread.Sleep(2000);
                 }
 
                 //Assert

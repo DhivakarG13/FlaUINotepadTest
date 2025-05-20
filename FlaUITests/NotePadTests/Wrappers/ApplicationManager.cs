@@ -49,7 +49,6 @@ namespace NotePadTests.Wrappers
             }
         }
 
-
         public ApplicationManager(string executable, UIA2Automation automation)
         {
             try
@@ -304,7 +303,7 @@ namespace NotePadTests.Wrappers
         }
 
         //KeyBoard Operations
-        public void CopyContentToClipBoard()
+        public void CopyFocusedContentToClipBoard()
         {
             try
             {
