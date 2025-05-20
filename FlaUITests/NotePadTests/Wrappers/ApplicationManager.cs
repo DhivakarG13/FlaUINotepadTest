@@ -154,7 +154,7 @@ namespace NotePadTests.Wrappers
         {
             if (MainWindow == null)
             {
-                throw new Exception("The mainwindow is null,the process is ended or not started");
+                throw new Exception("The main window is null,the process is ended or not started");
             }
 
             if (Name == null)
@@ -168,7 +168,7 @@ namespace NotePadTests.Wrappers
             }
             catch (Exception ex)
             {
-                throw new Exception($"UnExpected error occured when filtering window's descendents.\n Error type: {ex.ToString()},\n Error message: {ex.Message}");
+                throw new Exception($"UnExpected error occurred when filtering window's descendants.\n Error type: {ex.ToString()},\n Error message: {ex.Message}");
             }
         }
 
