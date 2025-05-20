@@ -1,4 +1,4 @@
 {
-  "SourceFilePath":"C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\FlaUINotepadTest\\TestData\\SourceFolder\\SourceFile.txt",
-  "DestinationFilePath":"C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\FlaUINotepadTest\\TestData\\DestinationFolder\\DestinationFile.txt"
+    "SourceFilePath": "D:\\TestData\\SourceFolder\\SourceFile.txt",
+    "DestinationFilePath": "D:\\TestData\\DestinationFolder\\DestinationFile.txt"
 }

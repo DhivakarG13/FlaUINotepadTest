@@ -1,16 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using FlaUI.UIA3;
-using FlaUI.Core.Input;
-using FlaUI.Core.WindowsAPI;
-using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Definitions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NotePadTests.Models;
 using NotePadTests.Utilities;
 using NotePadTests.Wrappers;
-using System.Runtime.ExceptionServices;
 
 
 namespace NotePadTests
@@ -18,8 +12,8 @@ namespace NotePadTests
     [TestClass]
     public class FileOperationTests
     {
-        private string configFilePath = "C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\FlaUINotepadTest\\TestData\\ConfigFileFolder\\ConfigFile.json";
-        private string ErrorLogFilePath = "C:\\Users\\Sruthi.Subaraja\\Desktop\\Dhivakar\\FlaUINotepadTest\\TestData\\TestLog\\" + $"ErrorLog[{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}].txt";
+        private string configFilePath = "D:\\TestData\\ConfigFileFolder\\ConfigFile.json";
+        private string ErrorLogFilePath = "D:\\TestData\\TestLog\\" + $"ErrorLog[{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}].txt";
         private FolderInfo FolderInfo;
         private NotepadManager Notepad;
 
@@ -45,11 +39,6 @@ namespace NotePadTests
                 {
                     Assert.Fail("Check whether the source file exists or the folder path in config is correct");
                 }
-
-                if (File.Exists(FolderInfo.DestinationFilePath))
-                {
-                    File.Delete(FolderInfo.DestinationFilePath);
-                }
             }
             catch (Exception ex)
             {
@@ -64,12 +53,12 @@ namespace NotePadTests
             // Launching the Notepad application.
             try
             {
-                using (Notepad = new NotepadManager(@"notepad.exe", new UIA3Automation()))
+                using (Notepad = new NotepadManager(new UIA3Automation()))
                 {
                     //Act
-                    Notepad.OpenAnExistingFile(FolderInfo.SourceFilePath);
+                    Notepad.OpenExistingFile(FolderInfo.SourceFilePath);
                     Notepad.CopyFocusedContentToClipBoard();
-                    Notepad.OpenANewPage();
+                    Notepad.OpenNewPage();
                     Notepad.PasteContentFromClipBoard();
                     Notepad.SaveContentToFile(FolderInfo.DestinationFilePath);
                 }
@@ -88,6 +77,13 @@ namespace NotePadTests
             catch (Exception ex)
             {
                 FileHandler.LogData(ex.Message, ErrorLogFilePath);
+            }
+            finally
+            {
+                if (File.Exists(FolderInfo.DestinationFilePath))
+                {
+                    File.Delete(FolderInfo.DestinationFilePath);
+                }
             }
         }
     }

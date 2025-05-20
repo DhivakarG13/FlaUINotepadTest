@@ -21,16 +21,16 @@ namespace NotePadTests.Wrappers
 
         public ConditionFactory AutomationConditionFactory { get; set; }
 
-        public double windowFetchWaitTime { get; set; } = 5000;
+        public double WindowFetchMaxWaitTime { get; set; } = 5000;
 
         //Constructors
         public ApplicationManager(string executable, UIA3Automation automation)
         {
             try
             {
-                Application = Application.Launch(@"notepad.exe");
+                Application = Application.Launch(executable);
                 AutomationConditionFactory = automation.ConditionFactory;
-                MainWindow = Application.GetMainWindow(automation,TimeSpan.FromMilliseconds(windowFetchWaitTime));
+                MainWindow = Application.GetMainWindow(automation,TimeSpan.FromMilliseconds(WindowFetchMaxWaitTime));
             }
             catch (ArgumentException)
             {
@@ -423,7 +423,44 @@ namespace NotePadTests.Wrappers
                 throw new Exception($"Internal Error while PasteContentFromClipBoard().\n Error type: {ex.ToString()},\n Error message: {ex.Message}");
             }
         }
-    
+
+        //MouseOperations
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="element"></param>
+        /// <exception cref="Exception"></exception>
+        public void ClickButton(AutomationElement element)
+        {
+            try
+            {
+                element.AsButton().Invoke();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error occurred while trying to click on the element.\n Error type: {ex.ToString()},\n Error message: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Selects a menu item represented by the specified <see cref="AutomationElement"/>.
+        /// </summary>
+        /// <param name="element">The <see cref="AutomationElement"/> representing the menu item to be selected.  This parameter cannot be
+        /// <see langword="null"/>.</param>
+        /// <exception cref="Exception">Thrown if an error occurs while attempting to select the menu item. The exception message provides
+        /// additional details.</exception>
+        public void SelectMenuItem(AutomationElement element)
+        {
+            try
+            {
+                element.AsMenuItem().Click();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error occurred while trying to select the menu item.\n Error type: {ex.ToString()},\n Error message: {ex.Message}");
+            }
+        }
+
         // Dispose
         public void Dispose()
         {
@@ -437,5 +474,6 @@ namespace NotePadTests.Wrappers
                 throw new Exception($"Error occurred while trying to close the application.\n Error type: {ex.ToString()},\n Error message: {ex.Message}");
             }
         }
+
     }
 }
