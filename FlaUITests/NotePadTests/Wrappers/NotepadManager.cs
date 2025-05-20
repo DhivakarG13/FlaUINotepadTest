@@ -11,6 +11,82 @@ namespace NotePadTests.Wrappers
 {
     public class NotepadManager : ApplicationManager
     {
+        private MenuItem fileMenu;
+        private MenuItem newMenu;
+        private MenuItem openMenu;
+        private MenuItem saveAsMenu;
+        private Window modalWindow_Open;
+        private Window modalWindow_SaveAs;
+
+        MenuItem FileMenu
+        {
+            get 
+            { 
+                if (fileMenu == null)
+                {
+                    fileMenu = GetDescendant("File").AsMenuItem();
+                }
+                return fileMenu;
+            }
+        }
+        MenuItem NewMenu
+        {
+            get 
+            { 
+                if (newMenu == null)
+                {
+                    newMenu = GetDescendant("New").AsMenuItem();
+                }
+                return newMenu;
+            }
+        }
+        MenuItem OpenMenu
+        {
+            get 
+            { 
+                if (openMenu == null)
+                {
+                    openMenu = GetDescendant("Open...").AsMenuItem();
+                }
+                return openMenu;
+            }
+        }
+        MenuItem SaveAsMenu
+        {
+            get 
+            { 
+                if (saveAsMenu == null)
+                {
+                    saveAsMenu = GetDescendant("Save As").AsMenuItem();
+                }
+                return saveAsMenu;
+            }
+        }
+
+        Window ModalWindow_Open
+        { 
+            get
+            {
+                if (modalWindow_Open == null)
+                {
+                    modalWindow_Open = GetModalWindow("Open"); ;
+                }
+                return modalWindow_Open;
+            }
+        }
+        Window ModalWindow_SaveAs
+        {
+            get
+            {
+                if (modalWindow_SaveAs == null)
+                {
+                    modalWindow_SaveAs = GetModalWindow("Save As");
+                }
+                return modalWindow_SaveAs;
+            }
+        }
+
+
         public NotepadManager(string executable, UIA3Automation automation) : base(executable, automation)
         {
         }
@@ -24,13 +100,10 @@ namespace NotePadTests.Wrappers
         /// <param name="filePath">The full path of the file to open. This must be a valid, accessible file path.</param>
         public void OpenAnExistingFile(string filePath)
         {
-            MenuItem fileMenu = GetDescendant("File").AsMenuItem();
-            fileMenu.Click();
-            MenuItem openMenuItem = GetDescendant("Open...").AsMenuItem();
-            openMenuItem.Click();
+            FileMenu.Click();
+            OpenMenu.Click();
             Thread.Sleep(1000);
-            Window openFileWindow = GetModalWindow("Open");
-            TextBox fileNameTextBox = GetModalWindowDescendant(openFileWindow, "File name:", ControlType.Edit).AsTextBox();
+            TextBox fileNameTextBox = GetModalWindowDescendant(ModalWindow_Open, "File name:", ControlType.Edit).AsTextBox();
             fileNameTextBox.Enter(filePath);
             Keyboard.Type(VirtualKeyShort.ENTER);
             Thread.Sleep(1000);
@@ -41,10 +114,8 @@ namespace NotePadTests.Wrappers
         /// </summary>
         public void OpenANewPage()
         {
-            MenuItem fileMenu = GetDescendant("File").AsMenuItem();
-            fileMenu.Click();
-            MenuItem newMenuItem = GetDescendant("New").AsMenuItem();
-            newMenuItem.Click();
+            FileMenu.Click();
+            NewMenu.Click();
         }
 
         /// <summary>
@@ -56,8 +127,7 @@ namespace NotePadTests.Wrappers
         {
             Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
             Thread.Sleep(1000);
-            Window saveAsWindow = GetModalWindow("Save As");
-            var fileNameTextBox = GetModalWindowDescendant(saveAsWindow, "File name:", ControlType.Edit).AsTextBox();
+            TextBox fileNameTextBox = GetModalWindowDescendant(ModalWindow_SaveAs, "File name:", ControlType.Edit).AsTextBox();
             fileNameTextBox.Enter(filePath);
             Keyboard.Type(VirtualKeyShort.ENTER);
             Thread.Sleep(2000);

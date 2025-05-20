@@ -1,0 +1,2 @@
+Errors Occurred:
+Assert.Fail failed. Destination file not created in path C:\Users\Sruthi.Subaraja\Desktop\Dhivakar\FlaUINotepadTest\TestData\DestinationFolder\DestinationFile.txt
