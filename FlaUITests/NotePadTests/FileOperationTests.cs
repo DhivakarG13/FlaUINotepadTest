@@ -12,6 +12,7 @@ namespace NotePadTests
     [TestClass]
     public class FileOperationTests
     {
+        //Test Documents related to Logging, copying and saving are kept in a local path away from source documents.
         private string configFilePath = "D:\\TestData\\ConfigFileFolder\\ConfigFile.json";
         private string ErrorLogFilePath = "D:\\TestData\\TestLog\\" + $"ErrorLog[{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}].txt";
         private FolderInfo FolderInfo;
@@ -23,7 +24,6 @@ namespace NotePadTests
             // Fetching Data from config file.
             try
             {
-                FileHandler.LogData("Errors Occurred:", ErrorLogFilePath);
                 if (!File.Exists(configFilePath))
                 {
                     Assert.Fail("configFile does not exist");
@@ -42,6 +42,7 @@ namespace NotePadTests
             }
             catch (Exception ex)
             {
+                FileHandler.LogData("Error Occurred:", ErrorLogFilePath);
                 FileHandler.LogData(ex.Message, ErrorLogFilePath);
             }
         }
@@ -76,6 +77,7 @@ namespace NotePadTests
             }
             catch (Exception ex)
             {
+                FileHandler.LogData("Error Occurred:", ErrorLogFilePath);
                 FileHandler.LogData(ex.Message, ErrorLogFilePath);
             }
             finally

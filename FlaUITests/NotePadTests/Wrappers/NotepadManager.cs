@@ -103,7 +103,7 @@ namespace NotePadTests.Wrappers
             SelectMenuItem(FileMenu);
             SelectMenuItem(OpenMenu);
             Thread.Sleep(1000);
-            TextBox fileNameTextBox = GetModalWindowDescendant(ModalWindow_Open, "File name:", ControlType.Edit).AsTextBox();
+            TextBox fileNameTextBox = GetWindowDescendant(ModalWindow_Open, "File name:", ControlType.Edit).AsTextBox();
             fileNameTextBox.Enter(filePath);
             Keyboard.Type(VirtualKeyShort.ENTER);
             Thread.Sleep(1000);
@@ -127,7 +127,7 @@ namespace NotePadTests.Wrappers
         {
             Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_S);
             Thread.Sleep(1000);
-            TextBox fileNameTextBox = GetModalWindowDescendant(ModalWindow_SaveAs, "File name:", ControlType.Edit).AsTextBox();
+            TextBox fileNameTextBox = GetWindowDescendant(ModalWindow_SaveAs, "File name:", ControlType.Edit).AsTextBox();
             fileNameTextBox.Enter(filePath);
             Keyboard.Type(VirtualKeyShort.ENTER);
             Thread.Sleep(2000);

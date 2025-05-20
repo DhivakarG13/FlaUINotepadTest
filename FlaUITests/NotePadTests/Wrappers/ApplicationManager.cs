@@ -24,40 +24,27 @@ namespace NotePadTests.Wrappers
         public double WindowFetchMaxWaitTime { get; set; } = 5000;
 
         //Constructors
-        public ApplicationManager(string executable, UIA3Automation automation)
+        //public ApplicationManager(string executable, UIA3Automation automation)
+        public ApplicationManager(string executable, AutomationBase automationBase)
         {
             try
             {
-                Application = Application.Launch(executable);
-                AutomationConditionFactory = automation.ConditionFactory;
-                MainWindow = Application.GetMainWindow(automation,TimeSpan.FromMilliseconds(WindowFetchMaxWaitTime));
-            }
-            catch (ArgumentException)
-            {
-                throw new Exception("Internal Error, The attributes provided to Application while launching may be null.");
-
-            }
-            catch (FileNotFoundException)
-            {
-                throw new Exception("Internal Error, The .exe file is not found");
-            }
-            catch (InvalidOperationException)
-            {
-                throw new Exception("Problem in attaching the process to Application");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"UnExpected Error,\n Error type: {ex.ToString()},\n Error message: {ex.Message}");
-            }
-        }
-
-        public ApplicationManager(string executable, UIA2Automation automation)
-        {
-            try
-            {
-                Application = Application.Launch(@"notepad.exe");
-                AutomationConditionFactory = automation.ConditionFactory;
-                MainWindow = Application.GetMainWindow(automation);
+                UIA2Automation UIA2Automation;
+                UIA3Automation UIA3Automation;
+                if (automationBase is UIA2Automation)
+                {
+                    UIA2Automation = new UIA2Automation();
+                    Application = Application.Launch(executable);
+                    AutomationConditionFactory = UIA2Automation.ConditionFactory;
+                    MainWindow = Application.GetMainWindow(UIA2Automation, TimeSpan.FromMilliseconds(WindowFetchMaxWaitTime));
+                }
+                if (automationBase is UIA3Automation)
+                {
+                    UIA3Automation = new UIA3Automation();
+                    Application = Application.Launch(executable);
+                    AutomationConditionFactory = UIA3Automation.ConditionFactory;
+                    MainWindow = Application.GetMainWindow(UIA3Automation, TimeSpan.FromMilliseconds(WindowFetchMaxWaitTime));
+                }
             }
             catch (ArgumentException)
             {
@@ -88,9 +75,9 @@ namespace NotePadTests.Wrappers
         /// <param name="className">The class name of the automation element to search for. Cannot be <see langword="null"/>.</param>
         /// <returns>The first descendant <see cref="AutomationElement"/> that matches the specified criteria.</returns>
         /// <exception cref="Exception"></exception>
-        public AutomationElement GetDescendant(string Name, ControlType controlType, string AutomationID, string className)
+        public AutomationElement GetDescendant(string Name, FlaUI.Core.Definitions.ControlType controlType, string AutomationID, string className)
         {
-            if(MainWindow == null)
+            if (MainWindow == null)
             {
                 throw new Exception("The main window is null,the process is ended or not started");
             }
@@ -225,7 +212,7 @@ namespace NotePadTests.Wrappers
 
             try
             {
-                return MainWindow.ModalWindows.FirstOrDefault(modalWindow => modalWindow.Title.Contains(windowTitle));
+                return MainWindow.ModalWindows.FirstOrDefault(modalWindow => modalWindow.Title.Equals(windowTitle));
             }
             catch (Exception ex)
             {
@@ -245,7 +232,7 @@ namespace NotePadTests.Wrappers
         /// <returns>The <see cref="AutomationElement"/> that matches the specified criteria, or <see langword="null"/> if no
         /// matching element is found.</returns>
         /// <exception cref="Exception"></exception>
-        public AutomationElement GetModalWindowDescendant(Window modalWindow, string Name, ControlType controlType, string AutomationID, string className)
+        public AutomationElement GetWindowDescendant(Window modalWindow, string Name, ControlType controlType, string AutomationID, string className)
         {
             if (modalWindow == null)
             {
@@ -281,7 +268,7 @@ namespace NotePadTests.Wrappers
         /// <returns>The <see cref="AutomationElement"/> that matches the specified criteria, or <see langword="null"/> if no
         /// matching element is found.</returns>
         /// <exception cref="Exception"></exception>
-        public AutomationElement GetModalWindowDescendant(Window modalWindow, string Name, ControlType controlType, string AutomationID)
+        public AutomationElement GetWindowDescendant(Window modalWindow, string Name, ControlType controlType, string AutomationID)
         {
             if (modalWindow == null)
             {
@@ -315,7 +302,7 @@ namespace NotePadTests.Wrappers
         /// <returns>The <see cref="AutomationElement"/> that matches the specified criteria, or <see langword="null"/> if no
         /// matching element is found.</returns>
         /// <exception cref="Exception"></exception>
-        public AutomationElement GetModalWindowDescendant(Window modalWindow, string Name, ControlType controlType)
+        public AutomationElement GetWindowDescendant(Window modalWindow, string Name, ControlType controlType)
         {
             if (modalWindow == null)
             {
@@ -347,7 +334,7 @@ namespace NotePadTests.Wrappers
         /// <returns>The <see cref="AutomationElement"/> that matches the specified criteria, or <see langword="null"/> if no
         /// matching element is found.</returns>
         /// <exception cref="Exception"></exception>
-        public AutomationElement GetModalWindowDescendant(Window modalWindow, string Name)
+        public AutomationElement GetWindowDescendant(Window modalWindow, string Name)
         {
             if (modalWindow == null)
             {
@@ -402,7 +389,7 @@ namespace NotePadTests.Wrappers
                 Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_A);
                 Keyboard.TypeSimultaneously(VirtualKeyShort.CONTROL, VirtualKeyShort.KEY_C);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception($"Internal Error while CopyContentToClipBoard().\n Error type: {ex.ToString()},\n Error message: {ex.Message}");
             }
@@ -426,9 +413,10 @@ namespace NotePadTests.Wrappers
 
         //MouseOperations
         /// <summary>
-        /// 
+        /// Simulates a click action on the specified UI automation element.
         /// </summary>
-        /// <param name="element"></param>
+        /// <param name="element">The <see cref="AutomationElement"/> representing the UI element to be clicked. Must not be <see
+        /// langword="null"/>.</param>
         /// <exception cref="Exception"></exception>
         public void ClickButton(AutomationElement element)
         {
